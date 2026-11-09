@@ -1,6 +1,9 @@
 import pandas as pd
 import time
 from concurrent.futures import ThreadPoolExecutor
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
 
 
 def processar_bloco(dados):
@@ -136,3 +139,21 @@ if __name__ == "__main__":
     fim = time.perf_counter()
 
     print("\nTempo de execução com multithreading:", round(fim - inicio, 2), "segundos")
+
+
+    console = Console()
+
+    tabela = Table(title="Resultados da Apuração - Multithreading", title_style="bold magenta", border_style="cyan")
+    tabela.add_column("Métrica / Categoria", style="bold yellow", no_wrap=True)
+    tabela.add_column("Detalhe / Vencedor", style="cyan")
+    tabela.add_column("Valor / Média", justify="right", style="bold green")
+
+    tabela.add_row("Total de Registros", "Aparecida d'Oeste - SP", f"{quantidade_total:,}".replace(",", "."))
+    tabela.add_row("Média Geral de Votos", "Geral", f"{media_geral:.2f}")
+    tabela.add_row("Partido com Maior Média", str(maior_partido), f"{medias_partidos[maior_partido]:.2f}")
+    tabela.add_row("Cargo com Maior Média", str(maior_cargo), f"{medias_cargos[maior_cargo]:.2f}")
+    tabela.add_row("Desempenho", "Tempo de Execução", f"{tempo_execucao} segundos", style="dim")
+
+    console.print("\n")
+    console.print(Panel(tabela, title="[bold green]Relatório de Desempenho (Multithreading)[/]", expand=False))
+    console.print("\n")
